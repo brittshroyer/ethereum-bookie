@@ -191,9 +191,9 @@ class App extends React.Component {
     	}
     ])
 
-    this.state.ContractInstance = MyContract.at("0xdfae245e9cb8499e762bc5d7f22e12e3eecf8148")
+    this.state.ContractInstance = MyContract.at("0xd23afadb8b79e00eaf8b66fc5b79686c314b50cc");
 
-    window.a = this.state // what is this??
+    window.a = this.state; // what is this?? // why set this on the window object?
   }
   componentDidMount(){
       this.updateState()
@@ -210,7 +210,6 @@ class App extends React.Component {
          }
       })
       this.state.ContractInstance.totalBet((err, result) => {
-        console.log('result', result);
          if(result != null){
             this.setState({
                totalBet: parseFloat(this.web3.fromWei(result, 'ether'))
@@ -250,10 +249,14 @@ class App extends React.Component {
 
     voteNumber(number, cb){
       let bet = this.refs['ether-bet'].value;
-      if (!bet) bet = 0.1
+
+      if (!bet) {
+        bet = 0.1;
+      }
+
       if (parseFloat(bet) < this.state.minimumBet) {
-         alert('You must bet more than the minimum')
-         cb()
+         alert('You must bet more than the minimum'); // TODO - change to notification rather than window alert
+         cb();
       } else {
         console.log('ContractInstance', this.web3.toWei(bet, 'ether'));
          this.state.ContractInstance.bet(number, {
@@ -261,15 +264,16 @@ class App extends React.Component {
             from: this.web3.eth.accounts[0],
             value: this.web3.toWei(bet, 'ether')
          }, (err, result) => {
-            cb()
-         })
+            cb();
+         });
       }
    }
 
    render(){
       return (
          <div className="main-container">
-            <h1>Bet Crazy Amounts of Ether Yo</h1>
+            <h1>Ethereum Bookie</h1>
+            <h3>The house doesn&#39;t always have to win</h3>
             <div className="block">
                 <b>Number of bets:</b> &nbsp;
                 <span>{this.state.numberOfBets}</span>
